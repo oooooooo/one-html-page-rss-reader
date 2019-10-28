@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>One HTML Page RSS Reader</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
+    <script src="https://unpkg.com/rss-parser@3.7.3/dist/rss-parser.min.js"></script>
+    <script type="module">
+        const CORS_PROXY = 'https://cors-anywhere.herokuapp.com/'
+        const parser = new RSSParser()
+
+        const feeds = {
+            'hatena': 'https://b.hatena.ne.jp/hotentry/it.rss',
+            'srad': 'https://srad.jp/sradjp.rss',
+            'hn': 'https://news.ycombinator.com/rss',
+            'r/programming': 'https://www.reddit.com/r/programming/.rss',
+            'dev.to': 'https://dev.to/feed',
+            'reddit': 'https://www.reddit.com/.rss',
+        }
+
+        document.addEventListener('click', event => {
+            if (!event.target.matches('button')) return
+            switchFeed(event.target.innerText)
+        })
+
+        const switchFeed = title =>
+            [...document.getElementsByTagName('ul')].forEach(ul => {
+                if (ul.id === title) {
+                    ul.style.display = ''
+                } else {
+                    ul.style.display = 'none'
+                }
+            })
+
+        const Menu = feeds => {
+            let menu = '<div class="buttons has-addons">'
+            Object.keys(feeds).forEach(title =>
+                menu += `<button class="button">${title}</button>`
+            )
+            menu += '</div>'
+            app.innerHTML = menu
+        }
+
+        const readFeed = feeds => {
+            Object.keys(feeds).forEach(title =>
+                parser.parseURL(CORS_PROXY + feeds[title], (error, feed) => {
+                    if (error) console.error('parse error', error)
+
+                    let display = 'none'
+                    if (Object.keys(feeds)[0] === title) {
+                        display = ''
+                    }
+
+                    let ul = document.createElement('ul')
+                    ul.style = `display: ${display}`
+                    ul.id = title
+                    app.appendChild(ul)
+                    feed.items.forEach(entry => {
+                        let li = document.createElement('li')
+                        ul.appendChild(li)
+                        li.innerHTML += `<li><a href="${entry.link}">${entry.title}</a> <img src="https://b.hatena.ne.jp/entry/image/${entry.link}" /></li>`
+                    })
+                })
+            )
+        }
+
+        const app = document.getElementById('app')
+        readFeed(feeds)
+        Menu(feeds)
+    </script>
+</head>
+<body>
+<section class="section">
+    <div class="container content">
+        <div id="app"/>
+    </div>
+</section>
+</body>
+</html>
