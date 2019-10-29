@@ -7,72 +7,49 @@
     <script src="https://unpkg.com/rss-parser@3.7.3/dist/rss-parser.min.js"></script>
     <script type="module">
         const CORS_PROXY = 'https://cors-anywhere.herokuapp.com/'
-        const parser = new RSSParser()
-
-        const feeds = {
-            'hatena': 'https://b.hatena.ne.jp/hotentry/it.rss',
-            'srad': 'https://srad.jp/sradjp.rss',
-            'hn': 'https://news.ycombinator.com/rss',
-            'r/programming': 'https://www.reddit.com/r/programming/.rss',
-            'dev.to': 'https://dev.to/feed',
-            'reddit': 'https://www.reddit.com/.rss',
-        }
-
-        document.addEventListener('click', event => {
-            if (!event.target.matches('button')) return
-            switchFeed(event.target.innerText)
-        })
-
-        const switchFeed = title =>
-            [...document.getElementsByTagName('ul')].forEach(ul => {
-                if (ul.id === title) {
-                    ul.style.display = ''
-                } else {
-                    ul.style.display = 'none'
-                }
-            })
-
-        const Menu = feeds => {
-            let menu = '<div class="buttons has-addons">'
-            Object.keys(feeds).forEach(title =>
-                menu += `<button class="button">${title}</button>`
-            )
-            menu += '</div>'
-            app.innerHTML = menu
-        }
-
-        const readFeed = feeds => {
-            Object.keys(feeds).forEach(title =>
-                parser.parseURL(CORS_PROXY + feeds[title], (error, feed) => {
-                    if (error) console.error('parse error', error)
-
-                    let display = 'none'
-                    if (Object.keys(feeds)[0] === title) {
-                        display = ''
-                    }
-
-                    let ul = document.createElement('ul')
-                    ul.style = `display: ${display}`
-                    ul.id = title
-                    app.appendChild(ul)
-                    feed.items.forEach(entry => {
-                        let li = document.createElement('li')
-                        ul.appendChild(li)
-                        li.innerHTML += `<li><a href="${entry.link}">${entry.title}</a> <img src="https://b.hatena.ne.jp/entry/image/${entry.link}" /></li>`
+        const parser =  new RSSParser
+        document.getElementById("menu").append(...[
+            ['hatena', 'https://b.hatena.ne.jp/hotentry/it.rss'],
+            ['srad', 'https://srad.jp/sradjp.rss'],
+            ['hn', 'https://news.ycombinator.com/rss'],
+            ['r/programming', 'https://www.reddit.com/r/programming/.rss'],
+            ['dev.to', 'https://dev.to/feed'],
+            ['reddit', 'https://www.reddit.com/.rss']
+        ].map(([feedName, url], idx) => {
+            const button = document.importNode(document.getElementById("buttons").content, true).querySelector("button")
+            button.textContent = feedName
+            const ul = document.createElement("ul")
+            parser.parseURL(CORS_PROXY + url, (error, feed) => {
+                !error && feed.items.map(({link, title}) => {
+                        const listEntry = document.importNode(document.getElementById("listEntries").content, true).querySelector("li")
+                        const a = listEntry.querySelector("a")
+                        const img = listEntry.querySelector("img")
+                        img.src = `https://b.hatena.ne.jp/entry/image/${link}`
+                        a.href = link
+                        a.textContent = title
+                        ul.appendChild(listEntry)
+                        idx === 0 && document.getElementById("content").appendChild(listEntry.cloneNode(true))
                     })
-                })
-            )
-        }
-
-        const app = document.getElementById('app')
-        readFeed(feeds)
-        Menu(feeds)
+            })
+            button.onclick = () => { document.getElementById("content").innerHTML = ul.innerHTML}
+            return button
+        }))
     </script>
 </head>
 <body>
 <section class="section">
     <div class="container content">
-        <div id="app"/>
+        <div id="menu" class="buttons has-addons"> </div>
+        <template id="buttons">
+            <button class="button"> </button>
+        </template>
+        <div id="content"> </div>
+        <template id="listEntries">
+            <li>
+                <a/>
+                <img src=""/>
+            </li>
+        </template>
     </div>
 </section>
 </body>
