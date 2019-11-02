@@ -61,7 +61,7 @@
                     feed.items.forEach(entry => {
                         let li = document.createElement('li')
                         ul.appendChild(li)
-                        li.innerHTML += `<li><a href="${entry.link}">${entry.title}</a> <img src="https://b.hatena.ne.jp/entry/image/${entry.link}" /></li>`
+                        li.innerHTML += `<li><a href="${entry.link}">${entry.title}</a> <a href="https://b.hatena.ne.jp/entry/${entry.link}"><img src="https://b.hatena.ne.jp/entry/image/${entry.link}" /></a></li>`
                     })
                 })
             )
