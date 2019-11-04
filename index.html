@@ -30,7 +30,15 @@
             switchFeed(event.target.innerText)
         })
 
-        const switchFeed = title =>
+        const switchFeed = title => {
+            document.querySelectorAll('button').forEach(button => {
+                if (button.textContent == title) {
+                    button.className = 'button is-primary'
+                } else {
+                    button.className = 'button'
+                }
+            });
+
             [...document.getElementsByTagName('ul')].forEach(ul => {
                 if (ul.id === title) {
                     ul.style.display = ''
@@ -38,6 +46,7 @@
                     ul.style.display = 'none'
                 }
             })
+        }
 
         const Menu = feeds => {
             let menu = '<div class="buttons has-addons">'
@@ -46,6 +55,7 @@
             )
             menu += '</div>'
             app.innerHTML = menu
+            document.querySelector('button').className = 'button is-primary'
         }
 
         const readFeed = feeds => {
