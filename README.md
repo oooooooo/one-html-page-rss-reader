@@ -2,7 +2,7 @@
 
 ## DEMO
 
-[https://oooooooo.github.io/one-html-page-rss-reader/index.html](https://oooooooo.github.io/one-html-page-rss-reader/index.html)
+[https://oooooooo.github.io/one-html-page-rss-reader/](https://oooooooo.github.io/one-html-page-rss-reader/)
 
 ## License
 
