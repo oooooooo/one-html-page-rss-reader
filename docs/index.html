@@ -12,6 +12,7 @@
     <script type="module">
         const CORS_PROXY = 'https://cors-korosu.herokuapp.com/'
         const parser = new RSSParser
+        let loading = true
         document.getElementById("menu").append(...[
             ['dev.to', 'https://dev.to/feed'],
             ['hackernoon', 'https://hackernoon.com/feed'],
@@ -32,6 +33,10 @@
                         const listEntry = document.importNode(document.getElementById("listEntries").content, true).querySelector("li")
                         const a = listEntry.querySelectorAll("a")
                         const img = listEntry.querySelector("img")
+                        if (loading) {
+                            document.getElementById("content").innerHTML = ''
+                            loading = false
+                        }
                         a[0].href = a[1].href = link
                         a[0].textContent = title
                         img.src = `https://b.hatena.ne.jp/entry/image/${link}`
@@ -56,7 +61,7 @@
         <template id="buttons">
             <button class="button"> </button>
         </template>
-        <div id="content"> </div>
+        <div id="content">Loading...</div>
         <template id="listEntries">
             <li>
                 <a></a>
