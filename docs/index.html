@@ -10,8 +10,8 @@
     </style>
     <script src="https://unpkg.com/rss-parser@3.7.3/dist/rss-parser.min.js"></script>
     <script type="module">
-        const CORS_PROXY = 'https://cors-anywhere.herokuapp.com/'
-        const parser =  new RSSParser
+        const CORS_PROXY = 'https://cors-korosu.herokuapp.com/'
+        const parser = new RSSParser
         document.getElementById("menu").append(...[
             ['dev.to', 'https://dev.to/feed'],
             ['hackernoon', 'https://hackernoon.com/feed'],
@@ -20,8 +20,8 @@
             ['r/javascript', 'https://www.reddit.com/r/javascript/.rss'],
             ['r/programming', 'https://www.reddit.com/r/programming/.rss'],
             ['reddit', 'https://www.reddit.com/.rss'],
-            ['slashdot', 'http://rss.slashdot.org/Slashdot/slashdotMain'],
-            ['srad', 'https://srad.jp/sradjp.rss']
+            ['srad', 'https://srad.jp/sradjp.rss'],
+            ['verge', 'https://www.theverge.com/rss/index.xml']
         ].map(([feedName, url], idx) => {
             const button = document.importNode(document.getElementById("buttons").content, true).querySelector("button")
             button.textContent = feedName
